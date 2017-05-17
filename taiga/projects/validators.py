@@ -318,3 +318,60 @@ class DuplicateProjectValidator(validators.Validator):
     description = serializers.CharField()
     is_private = serializers.BooleanField()
     users = DuplicateProjectMemberValidator(many=True)
+
+
+class GameValidator(validators.ModelValidator):
+    class Meta:
+        model = models.Game
+
+    def validate_roles(self, attrs, source):
+        project = attrs.get("project", None if self.object is None else self.object.project)
+        if project is None:
+            return attrs
+
+        roles = attrs[source]
+        if not isinstance(roles, list):
+            raise ValidationError(_("Invalid roles format"))
+
+        for role in roles:
+            if "id" not in role or "name" not in role:
+                raise ValidationError(_("Invalid role format"))
+
+            if project.roles.filter(id=role['id']).count() == 0:
+                raise ValidationError(_("Invalid role for the project"))
+
+        return attrs
+
+    def validate_scales(self, attrs, source):
+        scales = attrs[source]
+        if not isinstance(scales, list):
+            raise ValidationError(_("Invalid scales format"))
+
+        for scale in scales:
+            if "id" not in scale or "name" not in scale:
+                raise ValidationError(_("Invalid scale format"))
+
+        return attrs
+
+    def validate_userstories(self, attrs, source):
+        project = attrs.get("project", None if self.object is None else self.object.project)
+        if project is None:
+            return attrs
+
+        userstories = attrs[source]
+        if not isinstance(userstories, list):
+            raise ValidationError(_("Invalid user stories format"))
+
+        scales = map(lambda x: x['id'], attrs["scales"])
+
+        for us in userstories:
+            if "id" not in us or "scale_id" not in us:
+                raise ValidationError(_("Invalid user story format"))
+
+            if project.user_stories.filter(id=us['id']).count() == 0:
+                raise ValidationError(_("Invalid user story for the project"))
+
+            if us['scale_id'] is not None and us['scale_id'] not in scales:
+                raise ValidationError(_("Invalid scale id for user story"))
+
+        return attrs

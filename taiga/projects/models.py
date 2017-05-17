@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import uuid
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
@@ -1261,3 +1263,31 @@ class ProjectTemplate(TaggedMixin, TagsColorsMixin, models.Model):
         project.looking_for_people_note = self.looking_for_people_note
 
         return project
+
+
+class Game(models.Model):
+    uuid = models.CharField(max_length=32, editable=False, null=True,
+                            blank=True, default=None, db_index=True)
+    name = models.CharField(max_length=250, null=False, blank=False,
+                            verbose_name=_("name"))
+    project = models.ForeignKey(Project, null=False, blank=False)
+    created_at = models.DateTimeField(default=timezone.now,
+                                      verbose_name=_("create at"))
+    end_at = models.DateTimeField(null=True, blank=True)
+    userstories = JSONField()
+    scales = JSONField()
+    roles = JSONField()
+
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+            self.uuid = uuid.uuid4().hex
+        return super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Game"
+        verbose_name_plural = "Games"
+        ordering = ["project", "name", "uuid"]
+        unique_together = ("project", "uuid")
+
+    def __str__(self):
+        return self.name

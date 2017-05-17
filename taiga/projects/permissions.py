@@ -241,3 +241,11 @@ class ProjectTemplatePermission(TaigaResourcePermission):
     partial_update_perms = IsSuperUser()
     destroy_perms = IsSuperUser()
     list_perms = AllowAny()
+
+class GamePermission(TaigaResourcePermission):
+    retrieve_perms = HasProjectPerm('modify_us')
+    create_perms = HasProjectPerm('modify_us')
+    update_perms = HasProjectPerm('modify_us')
+    partial_update_perms = HasProjectPerm('modify_us')
+    destroy_perms = HasProjectPerm('modify_us')
+    list_perms = HasProjectPerm('modify_us')
