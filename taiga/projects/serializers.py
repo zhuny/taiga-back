@@ -523,3 +523,16 @@ class ProjectTemplateSerializer(serializers.LightSerializer):
     priorities = Field()
     severities = Field()
     roles = Field()
+
+
+class GameSerializer(serializers.LightSerializer):
+    uuid = Field()
+    name = Field()
+    project = Field(attr="project_id")
+    created_at = Field()
+    end_at = Field()
+    userstories = Field()
+    scales = Field()
+    roles = Field()
+
+

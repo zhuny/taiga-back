@@ -1028,3 +1028,11 @@ class InvitationViewSet(ModelListViewSet):
 
     def list(self, *args, **kwargs):
         raise exc.PermissionDenied(_("You don't have permisions to see that."))
+
+
+class GameViewSet(ModelCrudViewSet):
+    model = models.Game
+    serializer_class = serializers.GameSerializer
+    validator_class = validators.GameValidator
+    permission_classes = (permissions.GamePermission,)
+    filter_fields = ('project', 'uuid')
