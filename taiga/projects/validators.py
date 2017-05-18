@@ -333,11 +333,11 @@ class GameValidator(validators.ModelValidator):
         if not isinstance(roles, list):
             raise ValidationError(_("Invalid roles format"))
 
-        for role in roles:
-            if "id" not in role or "name" not in role:
-                raise ValidationError(_("Invalid role format"))
+        for role_id in roles:
+            if not isinstance(role_id, int):
+                raise ValidationError(_("Invalid role id format"))
 
-            if project.roles.filter(id=role['id']).count() == 0:
+            if project.roles.filter(id=role_id).count() == 0:
                 raise ValidationError(_("Invalid role for the project"))
 
         return attrs

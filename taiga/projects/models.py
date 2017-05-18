@@ -1277,6 +1277,8 @@ class Game(models.Model):
     userstories = JSONField()
     scales = JSONField()
     roles = JSONField()
+    _importing = None
+    _event_tag = "games"
 
     def save(self, *args, **kwargs):
         if not self.uuid:
