@@ -38,6 +38,7 @@ watched_types = set([
     "tasks.task",
     "wiki.wiki_page",
     "milestones.milestone",
+    "projects.game",
 ])
 
 
@@ -79,8 +80,11 @@ def emit_event_for_model(obj, *, type:str="change", channel:str="events",
     projectid = getattr(obj, "project_id")
     pk = getattr(obj, "pk", None)
 
-    app_name, model_name = content_type.split(".", 1)
-    routing_key = "changes.project.{0}.{1}".format(projectid, app_name)
+    if hasattr(obj, '_event_tag'):
+        event_tag = obj._event_tag
+    else:
+        event_tag, model_name = content_type.split(".", 1)
+    routing_key = "changes.project.{0}.{1}".format(projectid, event_tag)
 
     data = {"type": type,
             "matches": content_type,
