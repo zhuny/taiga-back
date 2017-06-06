@@ -365,13 +365,13 @@ class GameValidator(validators.ModelValidator):
         scales = map(lambda x: x['id'], attrs["scales"])
 
         for us in userstories:
-            if "id" not in us or "scale_id" not in us:
+            if "id" not in us:
                 raise ValidationError(_("Invalid user story format"))
 
             if project.user_stories.filter(id=us['id']).count() == 0:
                 raise ValidationError(_("Invalid user story for the project"))
 
-            if us['scale_id'] is not None and us['scale_id'] not in scales:
+            if 'scale_id' in us and us['scale_id'] is not None and us['scale_id'] not in scales:
                 raise ValidationError(_("Invalid scale id for user story"))
 
         return attrs
