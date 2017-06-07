@@ -1040,5 +1040,6 @@ class GameViewSet(ModelCrudViewSet):
     lookup_value_regex = "[\w-]+\/[0-9a-f-]+$"
 
     def dispatch(self, request, *args, **kwargs):
-        (kwargs['project__slug'], kwargs['uuid']) = kwargs.pop('selector').split("/")
+        if "selector" in kwargs:
+            (kwargs['project__slug'], kwargs['uuid']) = kwargs.pop('selector').split("/")
         return super().dispatch(request, *args, **kwargs)
