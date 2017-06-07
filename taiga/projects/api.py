@@ -1082,3 +1082,9 @@ class GameViewSet(ModelCrudViewSet):
     validator_class = validators.GameValidator
     permission_classes = (permissions.GamePermission,)
     filter_fields = ('project', 'uuid')
+    lookup_field = "selector"
+    lookup_value_regex = "[\w-]+\/[0-9a-f-]+$"
+
+    def dispatch(self, request, *args, **kwargs):
+        (kwargs['project__slug'], kwargs['uuid']) = kwargs.pop('selector').split("/")
+        return super().dispatch(request, *args, **kwargs)
