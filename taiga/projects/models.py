@@ -40,6 +40,7 @@ from taiga.projects.custom_attributes.models import TaskCustomAttribute
 from taiga.projects.custom_attributes.models import IssueCustomAttribute
 from taiga.projects.tagging.models import TaggedMixin
 from taiga.projects.tagging.models import TagsColorsMixin
+from taiga.projects.occ import OCCModelMixin
 from taiga.base.utils.files import get_file_path
 from taiga.base.utils.slug import slugify_uniquely
 from taiga.base.utils.slug import slugify_uniquely_for_queryset
@@ -1265,7 +1266,7 @@ class ProjectTemplate(TaggedMixin, TagsColorsMixin, models.Model):
         return project
 
 
-class Game(models.Model):
+class Game(OCCModelMixin, models.Model):
     uuid = models.CharField(max_length=32, editable=False, null=True,
                             blank=True, default=None, db_index=True)
     name = models.CharField(max_length=250, null=False, blank=False,
