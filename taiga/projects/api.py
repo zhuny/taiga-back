@@ -52,6 +52,7 @@ from taiga.projects.mixins.ordering import BulkUpdateOrderMixin
 from taiga.projects.tasks.models import Task
 from taiga.projects.tagging.api import TagsColorsResourceMixin
 from taiga.projects.userstories.models import UserStory, RolePoints
+from taiga.projects.occ import OCCResourceMixin
 from taiga.users import services as users_services
 
 from . import filters as project_filters
@@ -819,7 +820,7 @@ class InvitationViewSet(ModelListViewSet):
         raise exc.PermissionDenied(_("You don't have permisions to see that."))
 
 
-class GameViewSet(ModelCrudViewSet):
+class GameViewSet(OCCResourceMixin, ModelCrudViewSet):
     model = models.Game
     serializer_class = serializers.GameSerializer
     validator_class = validators.GameValidator
