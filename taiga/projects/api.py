@@ -1090,3 +1090,8 @@ class GameViewSet(OCCResourceMixin, ModelCrudViewSet):
         if "selector" in kwargs:
             (kwargs['project__slug'], kwargs['uuid']) = kwargs.pop('selector').split("/")
         return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(queryset, **self.kwargs)
+        return obj
