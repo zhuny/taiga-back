@@ -100,6 +100,9 @@ class UserStoryViewSet(AssignedUsersSignalMixin, OCCResourceMixin,
                        "total_voters"]
 
     def get_serializer_class(self, *args, **kwargs):
+        if self.request.QUERY_PARAMS.get("full_data", None):
+            return serializers.UserStorySerializer
+
         if self.action in ["retrieve", "by_ref"]:
             return serializers.UserStoryNeighborsSerializer
 
