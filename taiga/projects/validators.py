@@ -363,7 +363,7 @@ class GameValidator(validators.ModelValidator):
             raise ValidationError(_("Invalid user stories format"))
 
         scales = attrs["scales"] if self.object is None else self.object.scales
-        scales = map(lambda x: x['id'], scales)
+        scales = list(map(lambda x: x['id'], scales))
 
         for us in userstories:
             if "id" not in us:
