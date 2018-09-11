@@ -12,7 +12,7 @@ import taiga.base.db.models.fields.json
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('projects', '0059_auto_20170116_1633'),
+        ('projects', '0060_auto_20180614_1338'),
     ]
 
     operations = [
