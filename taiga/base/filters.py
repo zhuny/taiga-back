@@ -436,6 +436,29 @@ class BaseRelatedFieldsFilter(FilterBackend):
         return super().filter_queryset(request, queryset, view)
 
 
+class IdsFilter(FilterBackend):
+    filter_name = 'id__in'
+
+    def __init__(self, filter_name=None):
+        if filter_name:
+            self.filter_name = filter_name
+
+    def _get_id_queryparams(self, params):
+        ids = params.get(self.filter_name, None)
+        if ids:
+            return ids.split(",")
+
+        return None
+
+    def filter_queryset(self, request, queryset, view):
+        query_ids = self._get_id_queryparams(request.QUERY_PARAMS)
+
+        if query_ids:
+            queryset = queryset.filter(id__in=query_ids)
+
+        return super().filter_queryset(request, queryset, view)
+
+
 class OwnersFilter(BaseRelatedFieldsFilter):
     filter_name = 'owner'
     exclude_param_name = 'exclude_owner'

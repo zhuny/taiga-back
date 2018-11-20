@@ -653,6 +653,23 @@ def test_get_total_points(client):
     assert us_mixed.get_total_points() == 1.0
 
 
+def test_api_filter_by_id(client):
+    user = f.UserFactory.create()
+    project = f.ProjectFactory.create(owner=user)
+    f.MembershipFactory.create(project=project, user=user, is_admin=True)
+    us1 = f.UserStoryFactory.create(project=project, subject='Test 1')
+    us2 = f.UserStoryFactory.create(project=project, subject='Test 2')
+    us3 = f.UserStoryFactory.create(project=project, subject='Test 3')
+
+    client.login(user)
+    url = reverse("userstories-list") + "?id__in={},{}".format(us1.id, us3.id)
+
+    response = client.get(url)
+
+    assert len(response.data) == 2
+    assert response.data[1]["subject"] == us3.subject
+
+
 def test_api_filter_by_created_date(client):
     user = f.UserFactory(is_superuser=True)
     one_day_ago = datetime.now(pytz.utc) - timedelta(days=1)
