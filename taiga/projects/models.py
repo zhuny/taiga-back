@@ -1277,7 +1277,7 @@ class Game(OCCModelMixin, models.Model):
     end_at = models.DateTimeField(null=True, blank=True)
     userstories = JSONField()
     scales = JSONField()
-    roles = JSONField()
+    roles = JSONField(null=True, blank=True)
     _importing = None
     _event_tag = "games"
 
