@@ -692,5 +692,5 @@ class GameSerializer(serializers.LightSerializer):
     userstories = Field()
     scales = Field()
     roles = Field()
-
-
+    discard = Field()
+    notnow = Field()

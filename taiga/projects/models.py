@@ -1278,6 +1278,8 @@ class Game(OCCModelMixin, models.Model):
     userstories = JSONField()
     scales = JSONField()
     roles = JSONField(null=True, blank=True)
+    discard = JSONField(null=True, blank=True)
+    notnow = JSONField(null=True, blank=True)
     _importing = None
     _event_tag = "games"
 
