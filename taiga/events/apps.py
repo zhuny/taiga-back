@@ -31,7 +31,10 @@ def disconnect_events_signals():
 class EventsAppConfig(AppConfig):
     name = "taiga.events"
     verbose_name = "Events App Config"
-    watched_types = set()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.events_watched_types = set()
 
     def ready(self):
         connect_events_signals()
@@ -39,5 +42,4 @@ class EventsAppConfig(AppConfig):
             if not hasattr(config, 'watched_types'):
                 continue
 
-            self.watched_types = self.watched_types.union(config.watched_types)
-        print(self.watched_types)
+            self.events_watched_types = self.events_watched_types.union(config.watched_types)

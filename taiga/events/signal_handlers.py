@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from django.apps import apps
 from taiga.base.utils.db import get_typename_for_model_instance
 
 from . import middleware as mw
@@ -26,7 +27,8 @@ def on_save_any_model(sender, instance, created, **kwargs):
     content_type = get_typename_for_model_instance(instance)
 
     # Ignore any other events
-    if content_type not in events.watched_types:
+    app_config = apps.get_app_config('events')
+    if content_type not in app_config.events_watched_types:
         return
 
     sesionid = mw.get_current_session_id()
@@ -43,7 +45,8 @@ def on_delete_any_model(sender, instance, **kwargs):
     content_type = get_typename_for_model_instance(instance)
 
     # Ignore any other changes
-    if content_type not in events.watched_types:
+    app_config = apps.get_app_config('events')
+    if content_type not in app_config.events_watched_types:
         return
 
     sesionid = mw.get_current_session_id()
