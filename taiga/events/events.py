@@ -26,19 +26,14 @@ from taiga.base.utils import json
 from taiga.base.utils.db import get_typename_for_model_instance
 from . import middleware as mw
 from . import backends
+from .apps import EventsAppConfig
 from taiga.front.templatetags.functions import resolve
 from taiga.projects.history.choices import HistoryType
 
 
 # The complete list of content types
 # of allowed models for change events
-watched_types = set([
-    "userstories.userstory",
-    "issues.issue",
-    "tasks.task",
-    "wiki.wiki_page",
-    "milestones.milestone",
-])
+watched_types = EventsAppConfig.watched_types
 
 
 def emit_event(data:dict, routing_key:str, *,
