@@ -74,7 +74,7 @@ def emit_event_for_model(obj, *, type:str="change", channel:str="events",
     routing_key = "changes.project.%s.%s" % (projectid, app_name)
 
     if app_name in settings.INSTALLED_APPS:
-        routing_key = "routing_key.%s" % model_name
+        routing_key = "%s.%s" % (routing_key, model_name)
 
     data = {"type": type,
             "matches": content_type,
