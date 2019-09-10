@@ -16,6 +16,19 @@
 from django.conf import settings
 
 from taiga.base.utils.thumbnails import get_thumbnail_url, get_thumbnail
+from taiga.projects.attachments import models
+
+
+def get_attachment_by_id(project_id, attachment_id):
+    try:
+        obj = models.Attachment.objects.select_related("content_type").get(id=attachment_id)
+    except models.Attachment.DoesNotExist:
+        return None
+
+    if not obj.content_object or obj.content_object.project_id != project_id:
+        return None
+
+    return obj
 
 
 def get_timeline_image_thumbnail_name(attachment):
