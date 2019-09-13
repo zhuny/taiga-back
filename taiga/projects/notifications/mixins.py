@@ -53,8 +53,6 @@ class WatchedResourceMixin:
     """
 
     _not_notify = False
-    _old_watchers = None
-    _old_mentions = []
 
     @detail_route(methods=["POST"])
     def watch(self, request, pk=None):
@@ -105,6 +103,7 @@ class WatchedResourceMixin:
         if not getattr(self, 'object', None):
             self.object = self.get_object_or_none()
 
+        # Store old watchers and mentions to further proccesing
         obj = self.object
         if obj and obj.id:
             if hasattr(obj, "watchers"):
@@ -154,7 +153,7 @@ class WatchedResourceMixin:
 
         new_watchers = [
             watcher_id for watcher_id in obj.watchers
-            if watcher_id not in self._old_watchers
+            if watcher_id not in getattr(self, "_old_watchers", [])
             and watcher_id != self.request.user.id
         ]
         signal_watchers_added.send(sender=self.__class__,
@@ -167,7 +166,7 @@ class WatchedResourceMixin:
         Detect and notify mentioned users
         """
         submitted_mentions = self._get_submitted_mentions(obj)
-        new_mentions = list(set(submitted_mentions) - set(self._old_mentions))
+        new_mentions = list(set(submitted_mentions) - set(getattr(self, "_old_mentions", [])))
         if new_mentions:
             signal_mentions.send(sender=self.__class__,
                                  user=self.request.user,
