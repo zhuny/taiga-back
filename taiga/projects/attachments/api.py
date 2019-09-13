@@ -29,7 +29,6 @@ from taiga.base.api import ModelCrudViewSet
 from taiga.base.api.mixins import BlockedByProjectMixin
 from taiga.base.api.utils import get_object_or_404
 
-from taiga.projects.notifications.mixins import WatchedResourceMixin
 from taiga.projects.history.mixins import HistoryResourceMixin
 
 from . import permissions
@@ -38,8 +37,7 @@ from . import validators
 from . import models
 
 
-class BaseAttachmentViewSet(HistoryResourceMixin, WatchedResourceMixin,
-                            BlockedByProjectMixin, ModelCrudViewSet):
+class BaseAttachmentViewSet(HistoryResourceMixin, BlockedByProjectMixin, ModelCrudViewSet):
 
     model = models.Attachment
     serializer_class = serializers.AttachmentSerializer
