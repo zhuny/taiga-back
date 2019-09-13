@@ -123,7 +123,7 @@ def get_object_mentions(obj: object, comment: str):
     extract mentions from it.
     """
     if not hasattr(obj, "get_project"):
-        return
+        return []
 
     texts = (getattr(obj, "description", ""),
              getattr(obj, "content", ""),
