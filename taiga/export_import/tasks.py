@@ -17,28 +17,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import gzip
 import logging
 import sys
-import gzip
-
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-from django.utils import timezone
 
 from django.conf import settings
+from django.core.files.storage import default_storage
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from taiga.base.mails import mail_builder
 from taiga.base.utils import json
 from taiga.celery import app
-
 from . import exceptions as err
 from . import services
-from .renderers import ExportRenderer
 
 logger = logging.getLogger('taiga.export_import')
-
-import resource
 
 
 @app.task(bind=True)
