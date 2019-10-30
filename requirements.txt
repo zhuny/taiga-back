@@ -28,6 +28,7 @@ djmail==1.0.1
 docopt==0.6.2
 easy-thumbnails==2.4.1
 fn==0.4.3
+google-cloud-storage==1.21.0
 gunicorn==19.9.0
 html5lib==1.0.1
 idna==2.8
