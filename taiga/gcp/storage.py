@@ -1,8 +1,9 @@
 import io
+import mimetypes
+import os
 
 from django.conf import settings
 from django.core.files.storage import Storage
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from google.cloud import storage
 from google.cloud.storage import Blob
 
@@ -18,10 +19,18 @@ class GoogleCloudStorage(Storage):
     def _get_blob(self, name: str) -> Blob:
         return self.bucket.blob(self.generate_filename(f'{self.root}/{name}'))
 
-    def _save(self, name, content: InMemoryUploadedFile):
+    def _save(self, name, content):
         blob = self._get_blob(name)
         content.open()
-        blob.upload_from_file(content)
+
+        # Set content type only by `name`
+        ext = os.path.splitext(name)[1]
+        content_type = mimetypes.types_map.get(ext, None)
+
+        blob.upload_from_file(
+            content,
+            content_type=content_type
+        )
         return name
 
     def generate_filename(self, filename):
